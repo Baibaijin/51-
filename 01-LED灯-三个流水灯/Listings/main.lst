@@ -1,0 +1,82 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              02/25/2025 22:24:32 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\Keil\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.ls
+                    -t) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <STC89C5xRC.H>
+   2          #include <intrins.h>
+   3          
+   4          void Delay500ms(void)    //@11.0592MHz
+   5          {
+   6   1          unsigned char data i, j, k;
+   7   1          _nop_();
+   8   1          i = 4;
+   9   1          j = 129;
+  10   1          k = 119;
+  11   1          do {
+  12   2              do {
+  13   3                  while (--k);
+  14   3              } while (--j);
+  15   2          } while (--i);
+  16   1      }
+  17          
+  18          void main() {
+  19   1          unsigned char led1 = 0x80; // 第一个灯（初始在P0.7）
+  20   1          unsigned char led2 = 0x00; // 第二个灯（初始未激活）
+  21   1          unsigned char led3 = 0x00; // 第三个灯（初始未激活）
+  22   1          unsigned char count = 1;   // 已激活的灯数
+  23   1          
+  24   1          P0 = led1; // 初始状态：第一个灯亮
+  25   1          
+  26   1          while(1) {
+  27   2              Delay500ms();
+  28   2              
+  29   2              // 移动所有已激活的灯
+  30   2              led1 >>= 1;
+  31   2              if (led1 == 0x00) led1 = 0x80; // 循环到开头
+  32   2              
+  33   2              if (count >= 2) {
+  34   3                  led2 >>= 1;
+  35   3                  if (led2 == 0x00) led2 = 0x80;
+  36   3              }
+  37   2              
+  38   2              if (count >= 3) {
+  39   3                  led3 >>= 1;
+  40   3                  if (led3 == 0x00) led3 = 0x80;
+  41   3              }
+  42   2              
+  43   2              // 激活新灯（每次右移后激活一个）
+  44   2              if (count < 3) {
+  45   3                  if (count == 1) {
+  46   4                      led2 = 0x80; // 激活第二个灯
+  47   4                  } else if (count == 2) {
+  48   4                      led3 = 0x80; // 激活第三个灯
+  49   4                  }
+  50   3                  count++;
+  51   3              }
+  52   2              
+  53   2              // 合并灯的状态
+  54   2              P0 = led1 | led2 | led3;
+C51 COMPILER V9.60.7.0   MAIN                                                              02/25/2025 22:24:32 PAGE 2   
+
+  55   2          }
+  56   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     86    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
